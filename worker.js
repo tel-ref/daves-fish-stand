@@ -16,8 +16,8 @@ const SQUARE_LOCATION_ID = "LA1V3HV1YTC08";
 const SQUARE_VERSION = "2026-05-20";
 
 const SHOP_NAME = "Dave's Fish Stand";
-const SHOP_ORDER_EMAIL = "hello@davesfishstand.example";
-const ORDER_FROM_EMAIL = "Dave's Fish Stand <orders@davesfishstand.example>";
+const SHOP_ORDER_EMAIL = "dave@davesfishstand.com";
+const ORDER_FROM_EMAIL = "Dave's Fish Stand <dave@davesfishstand.com>";
 
 const ORIGIN_ZIP3 = 841;
 
