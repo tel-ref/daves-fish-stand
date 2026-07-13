@@ -20,6 +20,7 @@ const SHOP_ORDER_EMAIL = "hello@davesfishstand.example";
 const ORDER_FROM_EMAIL = "Dave's Fish Stand <orders@davesfishstand.example>";
 
 const ORIGIN_ZIP3 = 841;
+
 const STICKER_WEIGHT_LB = 0.05;
 const PACKAGING_BASE_LB = 0.15;
 const SHIP_BASE = 4.25;
