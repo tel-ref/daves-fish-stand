@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact — Dave's Fish Stand</title>
+<meta name="description" content="Get in touch with Dave's Fish Stand. TikTok DM, email, or catch the stand in person." />
+<meta property="og:title" content="Dave's Fish Stand" />
+<meta property="og:description" content="Hand-pressed sticker fish, landed daily and sold off the ice. Honest weights, square dealings." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Oswald:wght@300;400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body data-nav="contact.html">
+<!-- Fish illustration library — inlined into every page so <use href="#id"> always resolves
+     (no external-sprite CORS surprises when these move to Cloudflare). -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <!-- STEELHEAD -->
+    <symbol id="fish-steelhead" viewBox="0 0 240 130">
+      <path d="M150,40 C175,30 205,22 230,30 C214,48 214,82 230,100 C205,108 175,100 150,90 Z" fill="#6E8A93" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M24,65 C62,33 126,29 172,46 C184,52 190,58 192,65 C190,72 184,78 172,84 C126,101 62,97 24,65 Z" fill="#7E9AA3" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M92,40 C106,18 128,18 144,33 C126,33 110,36 100,43 Z" fill="#5D7F8A" stroke="#21303B" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M156,42 C163,33 173,33 178,40 C170,40 163,43 159,47 Z" fill="#5D7F8A" stroke="#21303B" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M70,80 C76,96 92,99 102,91 C90,89 78,86 72,77 Z" fill="#5D7F8A" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M44,49 C39,60 39,72 45,83" fill="none" stroke="#21303B" stroke-width="2" stroke-linecap="round"/>
+      <path d="M54,66 C100,61 150,63 188,66" fill="none" stroke="#21303B" stroke-width="1.6" stroke-dasharray="2 7" stroke-linecap="round"/>
+      <circle cx="40" cy="61" r="5.4" fill="#F2E9D4" stroke="#21303B" stroke-width="2"/>
+      <circle cx="40" cy="61" r="2.4" fill="#21303B"/>
+      <g fill="#3A5660"><circle cx="92" cy="50" r="2.4"/><circle cx="116" cy="46" r="2.4"/><circle cx="138" cy="50" r="2.4"/><circle cx="158" cy="54" r="2.2"/><circle cx="104" cy="60" r="2"/><circle cx="130" cy="62" r="2"/></g>
+    </symbol>
+
+    <!-- MACKEREL -->
+    <symbol id="fish-mackerel" viewBox="0 0 240 130">
+      <path d="M158,46 C182,36 208,28 232,34 C218,50 218,80 232,96 C208,102 182,94 158,84 Z" fill="#43707B" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M22,65 C64,40 132,36 178,50 C188,55 193,60 195,65 C193,70 188,75 178,80 C132,94 64,90 22,65 Z" fill="#5C8893" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M84,42 C92,30 104,30 112,39 C102,39 92,41 86,46 Z" fill="#3C6571" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M132,42 C140,32 150,32 156,40 C148,40 140,42 135,46 Z" fill="#3C6571" stroke="#21303B" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M70,80 C76,94 90,97 99,90 C88,88 77,85 72,77 Z" fill="#3C6571" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <g fill="none" stroke="#21303B" stroke-width="2" stroke-linecap="round" opacity="0.78">
+        <path d="M52,49 C66,44 80,52 96,47"/>
+        <path d="M70,45 C84,40 98,48 114,43"/>
+        <path d="M92,43 C106,39 120,46 136,42"/>
+        <path d="M116,44 C130,40 144,47 160,43"/>
+      </g>
+      <path d="M50,66 C96,62 146,64 188,66" fill="none" stroke="#21303B" stroke-width="1.5" stroke-dasharray="2 7" stroke-linecap="round"/>
+      <circle cx="40" cy="61" r="5.2" fill="#F2E9D4" stroke="#21303B" stroke-width="2"/>
+      <circle cx="40" cy="61" r="2.3" fill="#21303B"/>
+    </symbol>
+
+    <!-- RIVER PERCH -->
+    <symbol id="fish-perch" viewBox="0 0 240 130">
+      <path d="M156,42 C180,32 206,24 230,32 C216,48 216,82 230,98 C206,106 180,98 156,88 Z" fill="#7D7A30" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M26,66 C58,30 120,26 170,48 C182,54 188,60 190,66 C188,74 182,82 170,88 C120,104 58,100 26,66 Z" fill="#8E8B3C" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M64,34 L74,22 L80,33 L88,20 L94,32 L102,21 L108,34 C96,32 80,32 68,38 Z" fill="#6B6826" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M118,32 C130,24 144,26 150,36 C140,34 128,35 120,40 Z" fill="#6B6826" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M72,86 C80,100 96,102 104,94 C92,92 80,90 74,82 Z" fill="#6B6826" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#3F3D14" stroke-width="5" opacity="0.5" stroke-linecap="round"><path d="M80,44 L72,86"/><path d="M104,40 L98,90"/><path d="M128,42 L124,86"/><path d="M150,46 L148,82"/></g>
+      <circle cx="44" cy="62" r="5.4" fill="#F2E9D4" stroke="#21303B" stroke-width="2"/>
+      <circle cx="44" cy="62" r="2.4" fill="#21303B"/>
+      <path d="M48,50 C43,61 43,72 49,83" fill="none" stroke="#21303B" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- OLD WHISKERS (CATFISH) -->
+    <symbol id="fish-catfish" viewBox="0 0 240 130">
+      <path d="M150,48 C176,40 204,34 228,42 C214,56 214,80 228,94 C204,100 176,94 150,84 Z" fill="#5A5F63" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M24,66 C44,44 78,40 120,48 C150,53 174,58 188,66 C174,74 150,80 120,85 C78,92 44,88 24,66 Z" fill="#6C7176" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M96,46 C108,30 126,30 138,42 C124,42 110,44 102,50 Z" fill="#54585C" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M70,82 C78,98 96,100 106,92 C92,90 78,88 74,80 Z" fill="#54585C" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <g fill="none" stroke="#21303B" stroke-width="2" stroke-linecap="round">
+        <path d="M30,62 C18,52 10,52 4,56"/>
+        <path d="M30,66 C16,64 8,66 2,70"/>
+        <path d="M34,70 C24,80 16,84 10,86"/>
+      </g>
+      <path d="M52,66 C96,62 148,64 184,67" fill="none" stroke="#21303B" stroke-width="1.5" stroke-dasharray="2 8" stroke-linecap="round"/>
+      <circle cx="42" cy="60" r="4.6" fill="#F2E9D4" stroke="#21303B" stroke-width="2"/>
+      <circle cx="42" cy="60" r="2.1" fill="#21303B"/>
+    </symbol>
+
+    <!-- TINNED SARDINE -->
+    <symbol id="fish-sardine" viewBox="0 0 240 130">
+      <path d="M162,52 C184,44 206,38 228,44 C216,58 216,76 228,90 C206,96 184,90 162,80 Z" fill="#6E8593" stroke="#21303B" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M30,66 C72,48 134,46 180,58 C188,62 192,64 194,66 C192,68 188,70 180,74 C134,86 72,84 30,66 Z" fill="#88A0AD" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M98,48 C106,38 118,38 124,46 C114,46 106,48 101,52 Z" fill="#5E7785" stroke="#21303B" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M82,76 C88,88 100,90 108,84 C98,82 88,80 84,73 Z" fill="#5E7785" stroke="#21303B" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M48,66 C96,63 146,65 188,66" fill="none" stroke="#21303B" stroke-width="1.4" stroke-dasharray="2 8" stroke-linecap="round"/>
+      <circle cx="46" cy="63" r="4.6" fill="#F2E9D4" stroke="#21303B" stroke-width="1.9"/>
+      <circle cx="46" cy="63" r="2.1" fill="#21303B"/>
+      <g fill="#56707D" opacity="0.5"><circle cx="150" cy="60" r="9" /></g>
+    </symbol>
+
+    <!-- LARGEMOUTH BASS -->
+    <symbol id="fish-bass" viewBox="0 0 240 130">
+      <path d="M158,42 C182,32 208,24 232,32 C218,48 218,82 232,98 C208,106 182,98 158,88 Z" fill="#5C7A4C" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M24,64 C56,28 120,26 168,46 C182,52 190,58 192,65 C190,73 182,82 168,88 C120,104 56,100 24,64 Z" fill="#6E8E5B" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M70,32 L78,22 L84,31 L92,21 L98,31 L106,22 L112,33 C98,30 82,30 72,37 Z" fill="#516E42" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M120,34 C132,26 146,28 152,38 C142,36 130,37 122,42 Z" fill="#516E42" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M70,84 C78,99 95,101 104,93 C92,91 79,89 73,80 Z" fill="#516E42" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M24,64 C30,60 38,58 46,60 C40,66 40,70 46,74 C38,75 30,72 24,64 Z" fill="#7B9A68" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M40,72 C34,66 34,62 40,57" fill="none" stroke="#21303B" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M52,66 C96,62 150,64 186,68" fill="none" stroke="#2C402A" stroke-width="5" opacity="0.45" stroke-linecap="round" stroke-dasharray="10 6"/>
+      <circle cx="36" cy="60" r="5" fill="#F2E9D4" stroke="#21303B" stroke-width="2"/>
+      <circle cx="36" cy="60" r="2.3" fill="#21303B"/>
+    </symbol>
+
+    <!-- BROOK TROUT -->
+    <symbol id="fish-trout" viewBox="0 0 240 130">
+      <path d="M150,40 C175,30 205,22 230,30 C214,48 214,82 230,100 C205,108 175,100 150,90 Z" fill="#4E6B4A" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M24,65 C62,33 126,29 172,46 C184,52 190,58 192,65 C190,72 184,78 172,84 C126,101 62,97 24,65 Z" fill="#6C8A5E" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M40,78 C92,92 150,90 186,75 C150,98 84,100 46,86 Z" fill="#C9A86A" opacity="0.5"/>
+      <path d="M92,40 C106,18 128,18 144,33 C126,33 110,36 100,43 Z" fill="#3E5A3C" stroke="#21303B" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M156,42 C163,33 173,33 178,40 C170,40 163,43 159,47 Z" fill="#3E5A3C" stroke="#21303B" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M70,80 C76,96 92,99 102,91 C90,89 78,86 72,77 Z" fill="#3E5A3C" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M44,49 C39,60 39,72 45,83" fill="none" stroke="#21303B" stroke-width="2" stroke-linecap="round"/>
+      <g fill="#E7DBC0"><circle cx="70" cy="54" r="2.6"/><circle cx="92" cy="50" r="2.6"/><circle cx="112" cy="56" r="2.6"/><circle cx="132" cy="52" r="2.6"/><circle cx="84" cy="66" r="2.3"/><circle cx="108" cy="70" r="2.3"/><circle cx="150" cy="58" r="2.4"/><circle cx="128" cy="68" r="2.2"/></g>
+      <g fill="#B5402E"><circle cx="80" cy="60" r="2"/><circle cx="120" cy="62" r="2"/><circle cx="100" cy="58" r="2"/><circle cx="142" cy="66" r="1.8"/></g>
+      <circle cx="40" cy="61" r="5.4" fill="#F2E9D4" stroke="#21303B" stroke-width="2"/>
+      <circle cx="40" cy="61" r="2.4" fill="#21303B"/>
+    </symbol>
+
+    <!-- NORTHERN PIKE -->
+    <symbol id="fish-pike" viewBox="0 0 240 130">
+      <path d="M156,46 C180,38 206,32 228,40 C216,54 216,78 228,92 C206,100 180,94 156,86 Z" fill="#46603C" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M18,66 C50,52 96,46 140,52 C168,56 184,60 192,66 C184,72 168,76 140,80 C96,86 50,80 18,66 Z" fill="#5E7A4A" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M120,48 C134,40 150,42 158,52 C148,50 134,50 124,55 Z" fill="#3C5234" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M118,80 C126,92 140,94 148,86 C138,85 128,84 122,77 Z" fill="#3C5234" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M60,72 C66,84 78,86 86,80 C76,79 66,77 62,70 Z" fill="#3C5234" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M46,54 C42,62 42,70 47,78" fill="none" stroke="#21303B" stroke-width="2" stroke-linecap="round"/>
+      <path d="M20,68 C28,69 34,69 41,67" fill="none" stroke="#21303B" stroke-width="1.6" stroke-linecap="round"/>
+      <g fill="#CBD6AE" opacity="0.9"><ellipse cx="62" cy="58" rx="3.6" ry="2.2"/><ellipse cx="80" cy="56" rx="3.6" ry="2.2"/><ellipse cx="98" cy="57" rx="3.6" ry="2.2"/><ellipse cx="116" cy="58" rx="3.6" ry="2.2"/><ellipse cx="134" cy="59" rx="3.4" ry="2"/><ellipse cx="70" cy="66" rx="3.4" ry="2.1"/><ellipse cx="88" cy="67" rx="3.4" ry="2.1"/><ellipse cx="106" cy="68" rx="3.4" ry="2.1"/><ellipse cx="124" cy="68" rx="3.2" ry="2"/><ellipse cx="142" cy="66" rx="3" ry="1.9"/></g>
+      <circle cx="38" cy="62" r="4.8" fill="#F2E9D4" stroke="#21303B" stroke-width="2"/>
+      <circle cx="38" cy="62" r="2.2" fill="#21303B"/>
+    </symbol>
+
+    <!-- BLUEGILL (PANFISH) -->
+    <symbol id="fish-bluegill" viewBox="0 0 240 130">
+      <path d="M168,52 C184,44 200,40 216,46 C206,58 206,72 216,84 C200,90 184,86 168,78 Z" fill="#46606A" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M30,65 C40,36 80,28 116,32 C150,36 172,46 180,65 C172,84 150,94 116,98 C80,102 40,94 30,65 Z" fill="#5C7E84" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M60,86 C100,98 150,94 176,80 C150,96 92,100 56,90 Z" fill="#B6852F" opacity="0.55"/>
+      <path d="M64,34 L70,24 L76,33 L84,23 L90,32 L98,22 L104,32 L112,24 L118,34 C100,30 82,30 70,38 Z" fill="#3F5A60" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M84,92 C92,104 108,106 116,98 C104,97 92,96 88,89 Z" fill="#3F5A60" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M70,70 C74,82 84,86 92,80 C82,78 74,76 72,68 Z" fill="#3F5A60" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#3A565C" stroke-width="5" opacity="0.4" stroke-linecap="round"><path d="M68,42 L64,88"/><path d="M90,38 L86,92"/><path d="M112,38 L110,92"/><path d="M134,42 L132,88"/><path d="M154,48 L152,82"/></g>
+      <path d="M44,58 C40,64 40,72 46,78 C52,74 54,66 50,58 Z" fill="#21303B"/>
+      <path d="M30,66 C36,66 40,65 45,63" fill="none" stroke="#21303B" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="50" cy="57" r="5" fill="#F2E9D4" stroke="#21303B" stroke-width="2"/>
+      <circle cx="50" cy="57" r="2.3" fill="#21303B"/>
+    </symbol>
+
+    <!-- KOI (LIMITED) -->
+    <symbol id="fish-koi" viewBox="0 0 240 130">
+      <path d="M158,42 C184,30 206,20 232,28 C214,46 214,84 232,102 C206,110 184,100 158,88 Z" fill="#EDE4D2" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M214,40 C222,36 228,38 230,44 C224,52 214,54 210,48 Z" fill="#C9772B"/>
+      <path d="M24,64 C58,30 122,28 170,46 C184,52 190,58 192,65 C190,72 184,78 170,84 C122,102 58,98 24,64 Z" fill="#F2EAD8" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M40,78 C90,92 150,90 186,74 C150,98 80,100 44,86 Z" fill="#DACEB4" opacity="0.5"/>
+      <path d="M70,44 C84,38 100,42 104,54 C98,66 80,68 68,60 C62,52 64,48 70,44 Z" fill="#B5402E"/>
+      <path d="M120,40 C138,36 152,44 150,58 C144,68 126,68 118,58 C114,50 114,44 120,40 Z" fill="#C9772B"/>
+      <path d="M44,66 C56,60 70,64 70,74 C64,82 50,82 44,74 Z" fill="#B6852F" opacity="0.9"/>
+      <path d="M150,70 C160,66 170,70 168,78 C162,84 152,82 150,74 Z" fill="#21303B" opacity="0.85"/>
+      <path d="M96,40 C110,24 130,24 146,38 C128,36 112,38 102,44 Z" fill="#E3D8C0" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M70,82 C78,98 96,101 108,92 C94,90 80,88 74,79 Z" fill="#E3D8C0" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <g fill="none" stroke="#21303B" stroke-width="2" stroke-linecap="round">
+        <path d="M28,62 C20,58 14,58 9,61"/>
+        <path d="M30,68 C22,70 16,72 11,75"/>
+      </g>
+      <circle cx="42" cy="60" r="4.8" fill="#F2E9D4" stroke="#21303B" stroke-width="2"/>
+      <circle cx="42" cy="60" r="2.2" fill="#21303B"/>
+    </symbol>
+
+    <!-- SOCKEYE SALMON -->
+    <symbol id="fish-sockeye" viewBox="0 0 240 130">
+      <path d="M154,42 C178,32 206,24 230,32 C216,48 216,82 230,98 C206,106 178,98 154,88 Z" fill="#3E6672" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M22,65 C58,29 122,25 170,44 C184,50 190,57 192,65 C190,73 184,80 170,86 C122,105 58,101 22,65 Z" fill="#4E7D89" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M34,74 C80,92 136,92 176,76 C136,98 74,100 38,86 Z" fill="#DCE7E6" opacity="0.55"/>
+      <path d="M40,80 C80,94 128,94 164,80 C128,92 76,94 44,84 Z" fill="#C97A6E" opacity="0.35"/>
+      <path d="M96,38 C110,16 132,16 148,31 C130,31 114,34 104,41 Z" fill="#345863" stroke="#21303B" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M158,40 C165,31 175,31 180,38 C172,38 165,41 161,45 Z" fill="#345863" stroke="#21303B" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M68,80 C74,96 90,99 100,91 C88,89 76,86 70,77 Z" fill="#345863" stroke="#21303B" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M42,49 C37,60 37,72 43,83" fill="none" stroke="#21303B" stroke-width="2" stroke-linecap="round"/>
+      <g fill="#21303B"><circle cx="88" cy="46" r="1.8"/><circle cx="108" cy="42" r="1.8"/><circle cx="128" cy="46" r="1.8"/><circle cx="148" cy="50" r="1.7"/><circle cx="100" cy="56" r="1.6"/><circle cx="122" cy="58" r="1.6"/></g>
+      <circle cx="38" cy="61" r="5.2" fill="#F2E9D4" stroke="#21303B" stroke-width="2"/>
+      <circle cx="38" cy="61" r="2.3" fill="#21303B"/>
+    </symbol>
+
+    <!-- Little brand fish (wordmark) -->
+    <symbol id="fish-mini" viewBox="0 0 120 64">
+      <path d="M78,22 C90,16 104,12 116,18 C108,28 108,36 116,46 C104,52 90,48 78,42 Z" fill="#B5402E" stroke="#21303B" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M12,32 C30,16 60,14 84,24 C92,28 96,30 98,32 C96,34 92,36 84,40 C60,50 30,48 12,32 Z" fill="#2C5D5A" stroke="#21303B" stroke-width="2.6" stroke-linejoin="round"/>
+      <circle cx="26" cy="30" r="3.4" fill="#F2E9D4" stroke="#21303B" stroke-width="1.8"/>
+      <circle cx="26" cy="30" r="1.5" fill="#21303B"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Top ribbon + sticky nav. Identical on every page; active link is set by app.js. -->
+<div class="ribbon">
+  <span>Honest Weights</span><span class="dot">&#10022;</span><span>Square Dealings</span><span class="dot hide-sm">&#10022;</span><span class="hide-sm">Caught Fresh Daily</span>
+</div>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <img src="trout.png" alt="" aria-hidden="true" class="brand-fish-img" />
+      <span class="brand-name">Dave's <b>Fish</b> Stand</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="catch.html">The Catch</a>
+      <a href="build.html">The Build</a>
+      <a href="find.html">Find the Stand</a>
+      <a href="about.html">About Us</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:0.6rem">
+      <button class="basket-btn" id="openBasket" aria-label="Open basket">
+        <span class="basket-label">Basket</span> <span class="count" id="navCount">0</span>
+      </button>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+  <div class="crumbs"><nav><a href="index.html">Home</a><span class="sep">/</span><span class="here">Contact</span></nav></div>
+
+  <section class="page-banner">
+    <div class="page-banner-inner">
+      <div class="page-frame teal">
+        <p class="eyebrow">Drop Us a Line</p>
+        <h1>Say Hello</h1>
+        <div class="page-script" style="color:var(--brass)">from across the counter</div>
+        <p class="page-lead">Questions, orders, bulk orders, or just to say the Salmon made your day. Every message comes straight to us, and we answer all messages within 24 hours.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="contact-grid">
+      <div class="contact-cards">
+        <div class="contact-card">
+          <div class="k">Find us on TikTok</div>
+          <a class="v" href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">@thedavebirchshow</a>
+          <div class="d">Content posted daily. Come see the fun!</div>
+        </div>
+        <div class="contact-card">
+          <div class="k">Email</div>
+          <a class="v" href="mailto:hello@davesfishstand.example">dave@davesfishstand.com</a>
+          <div class="d">We respond to every email within 24 hours.</div>
+        </div>
+        <div class="contact-card">
+          <div class="k">In Person</div>
+          <a class="v" href="find.html">Find the stand &rarr;</a>
+          <div class="d">Come say hello at the market. Flag up means the counter's open.</div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <form class="form" id="contactForm" novalidate>
+          <div class="field row2">
+            <div class="field" style="gap:0.4rem">
+              <label for="cf-name">Your name</label>
+              <input id="cf-name" name="name" type="text" placeholder="Who's asking?" autocomplete="name" />
+            </div>
+            <div class="field" style="gap:0.4rem">
+              <label for="cf-email">Email</label>
+              <input id="cf-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="cf-topic">What are you after?</label>
+            <select id="cf-topic" name="topic">
+              <option>A question about an order</option>
+              <option>A custom or wholesale request</option>
+              <option>Where to find the stand</option>
+              <option>Just saying hello</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cf-msg">Your message</label>
+            <textarea id="cf-msg" name="message" placeholder="Tell me what you need&hellip;"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send it over</button>
+          <div class="form-flag" id="formFlag"></div>
+        </form>
+        <p style="font-size:0.86rem;color:var(--ink-soft);margin-top:1rem;line-height:1.5">This form opens your own mail app for now. Once the stand's wired up on Cloudflare, it'll send straight through.</p>
+      </div>
+    </div>
+  </section>
+<!-- Footer + basket drawer + order modal + shared script. Identical on every page. -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-brand">
+      <img src="trout.png" alt="" aria-hidden="true" class="brand-fish-img" />
+      <span class="brand-name">Dave's Fish Stand</span>
+    </div>
+    <div class="foot-tag">Honest Weights &middot; Square Dealings</div>
+    <div class="foot-links">
+      <a href="catch.html">The Catch</a>
+      <a href="build.html">The Build</a>
+      <a href="find.html">Find the Stand</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">Your Basket</a>
+    </div>
+    <p class="foot-fine">Hand pressed in Salt Lake City. Hand caught, hand drawn, and hand packed all in house.<br/>&copy; 2026 Dave's Fish Stand.</p>
+  </div>
+</footer>
+
+<!-- Basket drawer -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Your basket" aria-hidden="true">
+  <div class="drawer-head">
+    <div>
+      <h3>Your Basket</h3>
+      <div class="sub">Fresh off the ice</div>
+    </div>
+    <button class="drawer-close" id="closeBasket" aria-label="Close basket">&times;</button>
+  </div>
+  <div class="drawer-body" id="basketBody"></div>
+  <div class="drawer-foot">
+    <div class="subtotal"><span class="l">Subtotal</span><span class="v" id="subtotal">$0</span></div>
+    <p class="drawer-note">Stickers are pressed to order. Pick your catch, then check out securely below.</p>
+    <button class="btn btn-primary" id="checkoutBtn">Check out securely</button>
+    <a href="cart.html" class="drawer-viewcart">View the full basket &rarr;</a>
+  </div>
+</aside>
+
+<script src="app.js"></script>
+
+</body>
+</html>
