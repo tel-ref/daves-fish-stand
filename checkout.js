@@ -1,181 +1,278 @@
 /* ════════════════════════════════════════════════════════════
-   Dave's Fish Stand — /api/checkout (Cloudflare Pages Function)
-
-   Takes the Square payment token from checkout.js and actually
-   charges the card server-side, where the secret Access Token
-   can live safely. Recomputes the order total itself rather
-   than trusting the number the browser sent, so a tampered
-   client can't change the charge amount.
-
-   REQUIRED setup (Cloudflare dashboard → your Pages project →
-   Settings → Environment variables):
-     SQUARE_ACCESS_TOKEN   (required, add as a Secret/Encrypted var)
-     RESEND_API_KEY        (optional — enables the confirmation email)
-
-   NOTE: this only runs if the project is deployed via Wrangler or
-   a Git-connected Pages project. Cloudflare's dashboard drag-and-drop
-   upload does NOT run /functions — see CHECKOUT_SETUP.md.
+   Dave's Fish Stand — checkout
+   Reads the basket from localStorage (same store as app.js),
+   estimates shipping + tax, and takes payment with Square's
+   Web Payments SDK (Card, Apple Pay, Google Pay).
    ════════════════════════════════════════════════════════════ */
+(function () {
+  "use strict";
 
-// TODO going live: swap for your PRODUCTION location ID (Square Developer
-// Dashboard → Locations) and keep it in sync with checkout.js.
-const SQUARE_LOCATION_ID = "LA1V3HV1YTC08";
-const SQUARE_VERSION = "2026-05-20";
+  var STORE_KEY = "dfm_basket";
 
-const SHOP_NAME = "Dave's Fish Stand";
-// TODO: replace with Dave's real inbox once he has one, and a Resend-verified sending domain.
-const SHOP_ORDER_EMAIL = "hello@davesfishstand.example";
-const ORDER_FROM_EMAIL = "Dave's Fish Stand <orders@davesfishstand.example>";
+  var SQUARE_APP_ID = "sandbox-sq0idb-Nq058p1zIfGQNFoRiFJh2A";
+  var SQUARE_LOCATION_ID = "LA1V3HV1YTC08";
 
-// Keep these in sync with checkout.js — the server charges THIS total.
-const ORIGIN_ZIP3 = 841; // Salt Lake City, UT
-const STICKER_WEIGHT_LB = 0.05;
-const PACKAGING_BASE_LB = 0.15;
-const SHIP_BASE = 4.25;
-const SHIP_PER_LB = 1.35;
-const SHIP_PER_ZONE = 0.35;
-const UT_TAX_RATE = 0.0845;
+  var ORIGIN_ZIP3 = 841;
+  var STICKER_WEIGHT_LB = 0.05;
+  var PACKAGING_BASE_LB = 0.15;
+  var SHIP_BASE = 4.25;
+  var SHIP_PER_LB = 1.35;
+  var SHIP_PER_ZONE = 0.35;
+  var UT_TAX_RATE = 0.0845;
 
-function zoneFor(zip) {
-  const zip3 = parseInt(String(zip || "").slice(0, 3), 10);
-  if (!zip3) return 8;
-  const dist = Math.abs(zip3 - ORIGIN_ZIP3);
-  if (dist <= 3) return 1;
-  if (dist <= 50) return 2;
-  if (dist <= 150) return 3;
-  if (dist <= 300) return 4;
-  if (dist <= 500) return 5;
-  if (dist <= 700) return 6;
-  if (dist <= 850) return 7;
-  return 8;
-}
-function estimateShipping(itemCount, zip) {
-  const weight = PACKAGING_BASE_LB + itemCount * STICKER_WEIGHT_LB;
-  const cost = SHIP_BASE + weight * SHIP_PER_LB + zoneFor(zip) * SHIP_PER_ZONE;
-  return Math.round(cost * 100) / 100;
-}
+  function zoneFor(zip) {
+    var zip3 = parseInt(String(zip || "").slice(0, 3), 10);
+    if (!zip3) return 8;
+    var dist = Math.abs(zip3 - ORIGIN_ZIP3);
+    if (dist <= 3) return 1;
+    if (dist <= 50) return 2;
+    if (dist <= 150) return 3;
+    if (dist <= 300) return 4;
+    if (dist <= 500) return 5;
+    if (dist <= 700) return 6;
+    if (dist <= 850) return 7;
+    return 8;
+  }
+  function estimateShipping(itemCount, zip) {
+    var weight = PACKAGING_BASE_LB + itemCount * STICKER_WEIGHT_LB;
+    var cost = SHIP_BASE + weight * SHIP_PER_LB + zoneFor(zip) * SHIP_PER_ZONE;
+    return Math.round(cost * 100) / 100;
+  }
 
-function json(obj, status) {
-  return new Response(JSON.stringify(obj), {
-    status: status || 200,
-    headers: { "Content-Type": "application/json" }
-  });
-}
+  function loadBasket() {
+    try {
+      var raw = window.localStorage.getItem(STORE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+  function money(n) { return "$" + n.toFixed(2); }
+  function fishThumb(fish, cls) {
+    if (/\.(png|jpe?g|webp)$/i.test(fish)) return '<img class="' + cls + '" src="' + fish + '" alt="" />';
+    return '<svg class="' + cls + '" viewBox="0 0 240 130" aria-hidden="true"><use href="#' + fish + '"></use></svg>';
+  }
 
-function escapeHtml(s) {
-  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-  });
-}
+  var basket = loadBasket();
+  var keys = Object.keys(basket);
+  var itemCount = keys.reduce(function (n, k) { return n + basket[k].qty; }, 0);
+  var subtotal = keys.reduce(function (n, k) { return n + basket[k].qty * basket[k].price; }, 0);
 
-function buildEmailHtml(o) {
-  var itemsHtml = o.items.map(function (it) {
-    return '<tr><td style="padding:4px 8px 4px 0">' + it.qty + ' &times; ' + escapeHtml(it.name) + '</td><td style="padding:4px 0;text-align:right">$' + (it.qty * it.price).toFixed(2) + '</td></tr>';
-  }).join("");
-  var addr = o.fulfillment.type === "ship"
-    ? (escapeHtml(o.fulfillment.address1) + (o.fulfillment.address2 ? ", " + escapeHtml(o.fulfillment.address2) : "") + "<br>" + escapeHtml(o.fulfillment.city) + ", " + escapeHtml(o.fulfillment.state) + " " + escapeHtml(o.fulfillment.zip))
-    : "Pickup at the stand";
-  return (
-    '<div style="font-family:Georgia,serif;color:#21303B;max-width:480px;margin:0 auto">' +
-    "<h2 style=\"margin-bottom:0\">Thanks" + (o.buyer.name ? ", " + escapeHtml(o.buyer.name) : "") + "!</h2>" +
-    "<p>Your order <strong>" + o.orderNumber + "</strong> from " + SHOP_NAME + " is confirmed.</p>" +
-    '<table style="width:100%;border-collapse:collapse;margin:16px 0">' + itemsHtml + "</table>" +
-    "<p>Subtotal: $" + o.subtotal.toFixed(2) + "<br>" +
-    "Shipping: " + (o.fulfillment.type === "ship" ? "$" + o.shipping.toFixed(2) : "Free (pickup)") + "<br>" +
-    "Tax: $" + o.tax.toFixed(2) + "<br>" +
-    "<strong>Total: $" + o.total.toFixed(2) + "</strong></p>" +
-    "<p><strong>" + (o.fulfillment.type === "ship" ? "Shipping to" : "Fulfillment") + ":</strong><br>" + addr + "</p>" +
-    "<p>I press, pack, and post every fish by hand &mdash; I'll be in touch if anything needs your input.<br>&mdash; Dave</p>" +
-    "</div>"
-  );
-}
+  var gridEl = document.getElementById("checkoutGrid");
+  var emptyEl = document.getElementById("checkoutEmpty");
+  var countEl = document.getElementById("checkoutItemCount");
+  var itemsEl = document.getElementById("ckItems");
 
-async function sendConfirmationEmail(env, o) {
-  await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer " + env.RESEND_API_KEY,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      from: ORDER_FROM_EMAIL,
-      to: [o.buyer.email],
-      bcc: [SHOP_ORDER_EMAIL],
-      subject: "Your order " + o.orderNumber + " — " + SHOP_NAME,
-      html: buildEmailHtml(o)
-    })
-  });
-}
+  if (itemCount === 0) {
+    if (gridEl) gridEl.style.display = "none";
+    if (emptyEl) emptyEl.style.display = "";
+    return;
+  }
 
-export async function onRequestPost(context) {
-  const { request, env } = context;
-  try {
-    const body = await request.json();
-    const items = Array.isArray(body.items) ? body.items : [];
-    if (!items.length) return json({ success: false, message: "Your basket is empty." }, 400);
+  if (countEl) countEl.textContent = itemCount + (itemCount === 1 ? " fish" : " fish");
+  if (itemsEl) {
+    itemsEl.innerHTML = keys.map(function (k) {
+      var it = basket[k];
+      return (
+        '<div class="ck-item">' +
+          fishThumb(it.fish, "ck-item-thumb") +
+          '<div class="ck-item-name">' + it.name + '<span class="ck-item-qty">&times;' + it.qty + "</span></div>" +
+          '<div class="ck-item-total">' + money(it.qty * it.price) + "</div>" +
+        "</div>"
+      );
+    }).join("");
+  }
 
-    const itemCount = items.reduce(function (n, it) { return n + (it.qty || 0); }, 0);
-    const subtotal = items.reduce(function (n, it) { return n + (it.qty || 0) * (Number(it.price) || 0); }, 0);
+  var shipFields = document.getElementById("shipFields");
+  var pickupNote = document.getElementById("pickupNote");
+  var zipInput = document.getElementById("ck-zip");
+  var subtotalEl = document.getElementById("ckSubtotal");
+  var shippingEl = document.getElementById("ckShipping");
+  var taxEl = document.getElementById("ckTax");
+  var totalEl = document.getElementById("ckTotal");
+  var payAmtEl = document.getElementById("ck-pay-amt");
+  var form = document.getElementById("checkoutForm");
+  var statusEl = document.getElementById("paymentStatus");
+  var payBtn = document.getElementById("ck-pay-btn");
 
-    const fulfillment = body.fulfillment || {};
-    const isShip = fulfillment.type === "ship";
-    if (isShip && (!fulfillment.address1 || !fulfillment.city || !fulfillment.state || !fulfillment.zip)) {
-      return json({ success: false, message: "Please fill in a complete shipping address." }, 400);
-    }
+  var lastVals = { subtotal: subtotal, shipping: 0, tax: 0, total: subtotal, isShip: true };
 
-    const shipping = isShip ? estimateShipping(itemCount, fulfillment.zip) : 0;
-    const tax = Math.round(subtotal * UT_TAX_RATE * 100) / 100;
-    const total = Math.round((subtotal + shipping + tax) * 100) / 100;
-    const amountCents = Math.round(total * 100);
+  function currentFulfillment() {
+    var checked = document.querySelector('input[name="fulfillment"]:checked');
+    return checked ? checked.value : "ship";
+  }
 
-    if (!body.sourceId) return json({ success: false, message: "Missing payment details." }, 400);
-    if (amountCents < 1) return json({ success: false, message: "Nothing to charge." }, 400);
-    if (!env.SQUARE_ACCESS_TOKEN) {
-      return json({ success: false, message: "Payments aren't configured yet — the shop owner needs to add a Square Access Token." }, 500);
-    }
-
-    const buyer = body.buyer || {};
-    const squareRes = await fetch("https://connect.squareup.com/v2/payments", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + env.SQUARE_ACCESS_TOKEN,
-        "Content-Type": "application/json",
-        "Square-Version": SQUARE_VERSION
-      },
-      body: JSON.stringify({
-        idempotency_key: crypto.randomUUID(),
-        source_id: body.sourceId,
-        location_id: SQUARE_LOCATION_ID,
-        amount_money: { amount: amountCents, currency: "USD" },
-        buyer_email_address: buyer.email || undefined,
-        note: (SHOP_NAME + " order — " + itemCount + " item(s)").slice(0, 500)
-      })
+  function recalc() {
+    var isShip = currentFulfillment() === "ship";
+    if (shipFields) shipFields.style.display = isShip ? "" : "none";
+    if (pickupNote) pickupNote.style.display = isShip ? "none" : "";
+    document.querySelectorAll("#shipFields input").forEach(function (el) {
+      if (el.id === "ck-addr2") return;
+      el.required = isShip;
     });
 
-    const squareData = await squareRes.json();
-    if (!squareRes.ok) {
-      const detail = squareData.errors && squareData.errors[0] && (squareData.errors[0].detail || squareData.errors[0].code);
-      return json({ success: false, message: detail || "Payment was declined." }, 402);
+    var shipping = isShip ? estimateShipping(itemCount, zipInput ? zipInput.value : "") : 0;
+    var tax = Math.round(subtotal * UT_TAX_RATE * 100) / 100;
+    var total = Math.round((subtotal + shipping + tax) * 100) / 100;
+
+    if (subtotalEl) subtotalEl.textContent = money(subtotal);
+    if (shippingEl) shippingEl.textContent = isShip ? money(shipping) : "Free (pickup)";
+    if (taxEl) taxEl.textContent = money(tax);
+    if (totalEl) totalEl.textContent = money(total);
+    if (payAmtEl) payAmtEl.textContent = money(total);
+
+    lastVals = { subtotal: subtotal, shipping: shipping, tax: tax, total: total, isShip: isShip };
+
+    if (paymentRequest) {
+      paymentRequest.update({ total: { amount: total.toFixed(2), label: "Dave's Fish Stand" } });
     }
-
-    const payment = squareData.payment;
-    const orderNumber = "DFS-" + (payment.id || "").slice(-8).toUpperCase();
-
-    if (env.RESEND_API_KEY && buyer.email) {
-      try {
-        await sendConfirmationEmail(env, { orderNumber, buyer, fulfillment, items, subtotal, shipping, tax, total });
-      } catch (e) {
-        console.log("Confirmation email failed:", e);
-      }
-    }
-
-    return json({ success: true, orderNumber: orderNumber, receiptUrl: payment.receipt_url || null });
-  } catch (err) {
-    console.log("Checkout error:", err);
-    return json({ success: false, message: "Something went wrong processing your payment. Please try again." }, 500);
+    return lastVals;
   }
-}
 
-export async function onRequestGet() {
-  return json({ success: false, message: "Method not allowed." }, 405);
-}
+  document.querySelectorAll('input[name="fulfillment"]').forEach(function (r) { r.addEventListener("change", recalc); });
+  if (zipInput) zipInput.addEventListener("input", recalc);
+  recalc();
+
+  var card = null;
+  var applePay = null;
+  var googlePay = null;
+  var paymentRequest = null;
+
+  function setBusy(isBusy) {
+    if (payBtn) payBtn.disabled = isBusy || !card;
+    document.querySelectorAll(".ck-wallet-btn").forEach(function (el) {
+      el.style.pointerEvents = isBusy ? "none" : "";
+      el.style.opacity = isBusy ? "0.6" : "";
+    });
+  }
+
+  function updateWalletRowVisibility() {
+    var appleBtn = document.getElementById("apple-pay-button");
+    var googleBtn = document.getElementById("google-pay-button");
+    var anyVisible = (appleBtn && appleBtn.style.display !== "none") || (googleBtn && googleBtn.style.display !== "none");
+    var walletsEl = document.getElementById("ckWallets");
+    var dividerEl = document.getElementById("ckOrDivider");
+    if (walletsEl) walletsEl.style.display = anyVisible ? "" : "none";
+    if (dividerEl) dividerEl.style.display = anyVisible ? "" : "none";
+  }
+
+  async function submitOrder(token) {
+    var vals = recalc();
+    var data = new FormData(form);
+    var order = {
+      sourceId: token,
+      buyer: { name: data.get("name"), email: data.get("email"), phone: data.get("phone") },
+      fulfillment: {
+        type: vals.isShip ? "ship" : "pickup",
+        address1: data.get("address1") || "",
+        address2: data.get("address2") || "",
+        city: data.get("city") || "",
+        state: data.get("state") || "",
+        zip: data.get("zip") || ""
+      },
+      notes: data.get("notes") || "",
+      items: keys.map(function (k) { return { name: basket[k].name, price: basket[k].price, qty: basket[k].qty }; })
+    };
+
+    var res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(order)
+    });
+    var result = await res.json();
+    if (!res.ok || !result.success) throw new Error(result.message || "Payment couldn't be completed. Please try again.");
+
+    window.localStorage.removeItem(STORE_KEY);
+    document.querySelectorAll("#navCount").forEach(function (el) { el.textContent = "0"; });
+
+    form.style.display = "none";
+    var confirmEl = document.getElementById("checkoutConfirmed");
+    if (confirmEl) {
+      confirmEl.style.display = "";
+      var headingEl = document.getElementById("ck-confirm-heading");
+      if (headingEl && result.orderNumber) headingEl.textContent = "Order landed — #" + result.orderNumber;
+    }
+  }
+
+  async function payWithWallet(instance) {
+    if (!form.reportValidity()) return;
+    if (statusEl) statusEl.textContent = "";
+    setBusy(true);
+    try {
+      var result = await instance.tokenize();
+      if (result.status !== "OK") {
+        throw new Error((result.errors && result.errors[0] && result.errors[0].message) || "Payment was cancelled or declined.");
+      }
+      await submitOrder(result.token);
+    } catch (err) {
+      if (statusEl) statusEl.textContent = err.message || "Something went wrong. Please try again.";
+      setBusy(false);
+    }
+  }
+
+  async function initSquare() {
+    if (!window.Square) {
+      if (statusEl) statusEl.textContent = "Payment form failed to load. Refresh the page and try again.";
+      return;
+    }
+    var payments = window.Square.payments(SQUARE_APP_ID, SQUARE_LOCATION_ID);
+
+    paymentRequest = payments.paymentRequest({
+      countryCode: "US",
+      currencyCode: "USD",
+      total: { amount: lastVals.total.toFixed(2), label: "Dave's Fish Stand" }
+    });
+
+    try {
+      card = await payments.card();
+      await card.attach("#card-container");
+      if (payBtn) payBtn.disabled = false;
+    } catch (e) {
+      if (statusEl) statusEl.textContent = "Couldn't load the card form: " + e.message;
+    }
+
+    try {
+      applePay = await payments.applePay(paymentRequest);
+      await applePay.attach("#apple-pay-button");
+      var appleBtn = document.getElementById("apple-pay-button");
+      if (appleBtn) {
+        appleBtn.style.display = "";
+        appleBtn.addEventListener("click", function (e) { e.preventDefault(); payWithWallet(applePay); });
+      }
+    } catch (e) { }
+
+    try {
+      googlePay = await payments.googlePay(paymentRequest);
+      await googlePay.attach("#google-pay-button");
+      var googleBtn = document.getElementById("google-pay-button");
+      if (googleBtn) {
+        googleBtn.style.display = "";
+        googleBtn.addEventListener("click", function (e) { e.preventDefault(); payWithWallet(googlePay); });
+      }
+    } catch (e) { }
+
+    updateWalletRowVisibility();
+  }
+  initSquare();
+
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      if (!card) { if (statusEl) statusEl.textContent = "Payment form isn't ready yet — give it a second and try again."; return; }
+      if (statusEl) statusEl.textContent = "";
+      var originalLabel = payBtn.innerHTML;
+      setBusy(true);
+      payBtn.textContent = "Processing…";
+
+      try {
+        var tokenResult = await card.tokenize();
+        if (tokenResult.status !== "OK") {
+          throw new Error((tokenResult.errors && tokenResult.errors[0] && tokenResult.errors[0].message) || "Card was declined. Please try again.");
+        }
+        await submitOrder(tokenResult.token);
+      } catch (err) {
+        if (statusEl) statusEl.textContent = err.message || "Something went wrong. Please try again.";
+        setBusy(false);
+        payBtn.innerHTML = originalLabel;
+      }
+    });
+  }
+})();
