@@ -808,7 +808,16 @@ details.qa .a a { color: var(--vermillion); border-bottom: 1px solid rgba(181,64
 .ck-confirm h2 { font-family: var(--ff-display); font-size: 2rem; margin: 0.2rem 0; }
 .ck-confirm p { color: var(--ink-soft); font-size: 1.05rem; max-width: 420px; margin: 0.6rem auto 1.6rem; }
 .checkout-summary-col { position: sticky; top: 100px; }
-.checkout-summary-card { border: 2px solid var(--ink); border-radius: 6px; background: var(--paper-2); padding: 1.6rem 1.7rem; box-shadow: var(--shadow); }
+.checkout-summary-card { position: relative; border: 2px solid var(--ink); border-radius: 6px; background: var(--paper-2); padding: 1.6rem 1.7rem; box-shadow: var(--shadow); }
+.ck-num { display: inline-flex; align-items: center; justify-content: center; width: 1.6rem; height: 1.6rem; border: 2px solid var(--ink); border-radius: 50%; font-family: var(--ff-board); font-weight: 600; font-size: 0.82rem; margin-right: 0.6rem; vertical-align: middle; flex: none; }
+.ck-pay-brands { font-family: var(--ff-board); font-weight: 500; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); text-align: center; margin: 0; }
+.ck-secure-bar { display: flex; align-items: center; gap: 0.6rem; background: var(--paper); border: 1px dashed rgba(33,48,59,0.3); border-radius: 6px; padding: 0.7rem 0.9rem; font-size: 0.86rem; color: var(--ink-soft); line-height: 1.4; }
+.ck-secure-bar .ck-lock { flex: none; color: var(--teal); }
+.ck-trust-stamp { position: absolute; top: -16px; right: -8px; width: 84px; height: 84px; border-radius: 50%; border: 2px solid var(--vermillion); display: flex; align-items: center; justify-content: center; text-align: center; font-family: var(--ff-board); font-weight: 600; font-size: 0.6rem; letter-spacing: 0.03em; text-transform: uppercase; color: var(--vermillion); transform: rotate(-8deg); background: var(--paper); line-height: 1.25; padding: 4px; }
+.ck-trust-list { list-style: none; margin: 1.1rem 0 0; padding-top: 1rem; border-top: 1px dashed rgba(33,48,59,0.25); display: flex; flex-direction: column; gap: 0.5rem; }
+.ck-trust-list li { font-size: 0.86rem; color: var(--ink-soft); padding-left: 1rem; position: relative; }
+.ck-trust-list li::before { content: "\2014"; position: absolute; left: 0; top: 0; color: var(--teal); }
+.ck-trust-list a { color: var(--teal); }
 .ck-items { display: flex; flex-direction: column; gap: 0.7rem; margin: 1rem 0 1.2rem; padding-top: 1rem; border-top: 1px dashed rgba(33,48,59,0.25); }
 .ck-item { display: grid; grid-template-columns: 44px 1fr auto; gap: 0.7rem; align-items: center; }
 .ck-item-thumb { width: 44px; height: 44px; object-fit: contain; }
