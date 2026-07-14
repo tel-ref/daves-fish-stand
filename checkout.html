@@ -194,9 +194,9 @@
   </defs>
 </svg>
 
-<!-- Top ribbon + sticky nav. Identical on every page; active link is set by app.js. -->
+<!-- Top ribbon — checkout-specific trust copy (every other page keeps the standard ribbon). -->
 <div class="ribbon">
-  <span>Honest Weights</span><span class="dot">&#10022;</span><span>Square Dealings</span><span class="dot hide-sm">&#10022;</span><span class="hide-sm">Caught Fresh Daily</span>
+  <span>Secure Checkout</span><span class="dot">&#10022;</span><span>Encrypted by Square</span><span class="dot hide-sm">&#10022;</span><span class="hide-sm">Packed by Dave, Not a Warehouse</span>
 </div>
 
 <header class="nav" id="nav">
@@ -244,7 +244,7 @@
         <div class="checkout-main">
           <form id="checkoutForm" class="checkout-form">
             <div class="ck-block">
-              <h2 class="ck-h2">Contact</h2>
+              <h2 class="ck-h2"><span class="ck-num">1</span>Contact</h2>
               <div class="field"><label for="ck-name">Full name</label><input id="ck-name" name="name" type="text" required autocomplete="name" /></div>
               <div class="field row2">
                 <div class="field"><label for="ck-email">Email</label><input id="ck-email" name="email" type="email" required autocomplete="email" /></div>
@@ -253,7 +253,7 @@
             </div>
 
             <div class="ck-block">
-              <h2 class="ck-h2">Fulfillment</h2>
+              <h2 class="ck-h2"><span class="ck-num">2</span>Fulfillment</h2>
               <div class="ck-fulfill">
                 <label class="ck-fulfill-opt"><input type="radio" name="fulfillment" value="ship" checked /><span>Ship to me</span></label>
                 <label class="ck-fulfill-opt"><input type="radio" name="fulfillment" value="pickup" /><span>Pick up at the stand</span></label>
@@ -271,21 +271,25 @@
             </div>
 
             <div class="ck-block">
-              <h2 class="ck-h2">Order notes <span class="ck-optional">optional</span></h2>
+              <h2 class="ck-h2"><span class="ck-num">3</span>Order notes <span class="ck-optional">optional</span></h2>
               <div class="field"><textarea id="ck-notes" name="notes" rows="3" placeholder="Anything I should know?" style="min-height:90px"></textarea></div>
             </div>
 
             <div class="ck-block">
-              <h2 class="ck-h2">Payment</h2>
+              <h2 class="ck-h2"><span class="ck-num">4</span>Payment</h2>
               <div class="ck-wallets" id="ckWallets" style="display:none">
                 <div id="apple-pay-button" class="ck-wallet-btn" style="display:none"></div>
                 <div id="google-pay-button" class="ck-wallet-btn" style="display:none"></div>
               </div>
               <div class="ck-or-divider" id="ckOrDivider" style="display:none"><span>or pay with card</span></div>
               <div id="card-container" class="ck-card-container"></div>
+              <p class="ck-pay-brands">We accept Visa &middot; Mastercard &middot; Amex &middot; Discover</p>
               <p id="paymentStatus" class="ck-pay-status" role="status"></p>
-              <button type="submit" id="ck-pay-btn" class="btn btn-primary ck-pay-btn" disabled>Pay <span id="ck-pay-amt">$0.00</span></button>
-              <p class="ck-secure-note">Payments are processed securely by Square. Your card details never touch Dave's servers.</p>
+              <div class="ck-secure-bar">
+                <svg class="ck-lock" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+                <span>Encrypted end-to-end by Square &mdash; Dave never sees or stores your card.</span>
+              </div>
+              <button type="submit" id="ck-pay-btn" class="btn btn-primary ck-pay-btn" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:0.4rem;vertical-align:-2px"><rect x="5" y="11" width="14" height="9" rx="1.5"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Pay securely <span id="ck-pay-amt">$0.00</span></button>
             </div>
           </form>
 
@@ -300,6 +304,7 @@
 
         <aside class="checkout-summary-col">
           <div class="checkout-summary-card">
+            <div class="ck-trust-stamp">Inspected<br>&amp; Packed<br>by Dave</div>
             <h2 class="ck-h2">Your catch</h2>
             <div id="ckItems" class="ck-items"></div>
             <div class="ck-totals">
@@ -308,6 +313,11 @@
               <div class="row"><span class="l">Tax (UT)</span><span class="v" id="ckTax">$0.00</span></div>
               <div class="row grand"><span class="l">Total</span><span class="v" id="ckTotal">$0.00</span></div>
             </div>
+            <ul class="ck-trust-list">
+              <li>Hand-pressed and inspected before it ships</li>
+              <li>Packed within 2&ndash;3 business days</li>
+              <li>Questions? <a href="mailto:hello@davesfishstand.example">Email me</a> anytime</li>
+            </ul>
             <a href="cart.html" class="drawer-viewcart">&larr; Edit your basket</a>
           </div>
         </aside>
