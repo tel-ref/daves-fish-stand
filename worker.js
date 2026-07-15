@@ -12,15 +12,18 @@
      RESEND_API_KEY        (optional — enables the confirmation email)
    ════════════════════════════════════════════════════════════ */
 
+// TODO going live: swap for your PRODUCTION location ID (Square Developer
+// Dashboard → Locations) and keep it in sync with checkout.js.
 const SQUARE_LOCATION_ID = "LA1V3HV1YTC08";
 const SQUARE_VERSION = "2026-05-20";
 
 const SHOP_NAME = "Dave's Fish Stand";
-const SHOP_ORDER_EMAIL = "dave@davesfishstand.com";
-const ORDER_FROM_EMAIL = "Dave's Fish Stand <dave@davesfishstand.com>";
+// TODO: replace with Dave's real inbox once he has one, and a Resend-verified sending domain.
+const SHOP_ORDER_EMAIL = "hello@davesfishstand.example";
+const ORDER_FROM_EMAIL = "Dave's Fish Stand <orders@davesfishstand.example>";
 
-const ORIGIN_ZIP3 = 841;
-
+// Keep these in sync with checkout.js — the server charges THIS total.
+const ORIGIN_ZIP3 = 841; // Salt Lake City, UT
 const STICKER_WEIGHT_LB = 0.05;
 const PACKAGING_BASE_LB = 0.15;
 const SHIP_BASE = 4.25;
@@ -167,12 +170,33 @@ async function handleCheckout(request, env) {
   }
 }
 
+async function serveDomainAssociation(env) {
+  // Square/Apple fetch this file directly and choke on range/conditional
+  // responses or edge compression, so bypass all of that: strip Range and
+  // conditional headers before asking the asset store for it, then hand
+  // back a plain, uncompressed 200 with an exact Content-Length.
+  const assetRes = await env.ASSETS.fetch(new Request("https://assets.local/.well-known/apple-developer-merchantid-domain-association"));
+  const body = await assetRes.arrayBuffer();
+  return new Response(body, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Content-Length": String(body.byteLength),
+      "Cache-Control": "no-store"
+    },
+    encodeBody: "manual"
+  });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === "/api/checkout") {
       if (request.method === "POST") return handleCheckout(request, env);
       return json({ success: false, message: "Method not allowed." }, 405);
+    }
+    if (url.pathname === "/.well-known/apple-developer-merchantid-domain-association") {
+      return serveDomainAssociation(env);
     }
     return env.ASSETS.fetch(request);
   }
