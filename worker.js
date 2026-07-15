@@ -180,7 +180,8 @@ async function serveDomainAssociation(env) {
   return new Response(body, {
     status: 200,
     headers: {
-      "Content-Type": "text/plain; charset=utf-8",
+      "Content-Type": "application/octet-stream",
+      "Content-Disposition": "attachment; filename=\"apple-developer-merchantid-domain-association\"",
       "Content-Length": String(body.byteLength),
       "Cache-Control": "no-store"
     },
